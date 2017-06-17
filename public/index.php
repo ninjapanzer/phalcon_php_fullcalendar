@@ -56,29 +56,19 @@ try {
         return $view;
     };
 
-    // Setup a base URI so that all generated URIs include the "/" directory
-    $di['url'] = function() {
-        $url = new Url();
-        $url->setBaseUri('/');
-        return $url;
-    };
+    $assets = $di['assets'];
+    $assets->collection('fullcalendarCSS')
+           ->addCss('node_modules/fullcalendar/dist/fullcalendar.min.css');
+    $assets->collection('fullcalendarJS')
+           ->addJs('node_modules/jquery/dist/jquery.min.js')
+           ->addJs('node_modules/moment/min/moment.min.js')
+           ->addJs('node_modules/fullcalendar/dist/fullcalendar.min.js')
+           ->addJs('js/fullcalendarImpl.js');
 
-    // Setup the tag helpers
-    $di['tag'] = function() {
-        return new Tag();
-    };
+    $di->url->setBaseUri('/')
 
     // Handle the request
     $application = new Application($di);
-
-    $fullCalendarCSSCollection = $application->assets->collection('fullcalendarCSS');
-    $fullCalendarCSSCollection->addCss('node_modules/fullcalendar/dist/fullcalendar.min.css');
-
-    $fullCalendarJSCollection = $application->assets->collection('fullcalendarJS');
-    $fullCalendarJSCollection->addJs('node_modules/jquery/dist/jquery.min.js');
-    $fullCalendarJSCollection->addJs('node_modules/moment/min/moment.min.js');
-    $fullCalendarJSCollection->addJs('node_modules/fullcalendar/dist/fullcalendar.min.js');
-
     echo $application->handle()->getContent();
 
 } catch (Exception $e) {
