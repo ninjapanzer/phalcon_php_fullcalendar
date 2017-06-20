@@ -65,7 +65,7 @@ try {
            ->addJs('node_modules/fullcalendar/dist/fullcalendar.min.js')
            ->addJs('js/fullcalendarImpl.js');
 
-    $di->url->setBaseUri('/')
+    $di->url->setBaseUri('/');
 
     // Handle the request
     $application = new Application($di);
