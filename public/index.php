@@ -13,12 +13,18 @@ try {
 
     // Register an autoloader
     $loader = new Loader();
+    $loader->registerNamespaces(
+        [
+           'App\Assets'    => '../app/assets/'
+        ]
+    );
     $loader->registerDirs(
         array(
             '../app/controllers/',
             '../app/models/'
         )
-    )->register();
+    );
+    $loader->register();
 
     // Create a DI
     $di = new FactoryDefault();
@@ -56,14 +62,16 @@ try {
         return $view;
     };
 
-    $assets = $di['assets'];
-    $assets->collection('fullcalendarCSS')
-           ->addCss('node_modules/fullcalendar/dist/fullcalendar.min.css');
-    $assets->collection('fullcalendarJS')
-           ->addJs('node_modules/jquery/dist/jquery.min.js')
-           ->addJs('node_modules/moment/min/moment.min.js')
-           ->addJs('node_modules/fullcalendar/dist/fullcalendar.min.js')
-           ->addJs('js/fullcalendarImpl.js');
+    $di['assetPipeline'] = function() use ($di) {
+        $options = [
+            'jsPath'      => '../app/assets/js/',
+            'cssPath'     => '../app/assets/css/',
+            'manifestExt' => '.manifest'
+        ];
+        return new \App\Assets\ApplicationManifest($di['assets'], $options);
+    };
+
+    $di['assetPipeline']->loadManifests();
 
     $di['url']->setBaseUri('/');
 

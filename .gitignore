@@ -1,4 +1,7 @@
+.DS_Store
 node_modules
 public/node_modules
-!.gitkeep
+public/*.css
+public/*.js
 storage/
+!.gitkeep
