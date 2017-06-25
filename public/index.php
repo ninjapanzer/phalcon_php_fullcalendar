@@ -2,6 +2,10 @@
 
 use Phalcon\Loader;
 use Phalcon\Tag;
+use Phalcon\Security;
+use Phalcon\Session\Adapter\Files as SessionAdapter;
+use Phalcon\Flash\Session as FlashSession;
+use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\Url;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\Application;
@@ -15,7 +19,9 @@ try {
     $loader = new Loader();
     $loader->registerNamespaces(
         [
-           'App\Assets'    => '../app/assets/'
+           'App\Assets'    => '../app/assets/',
+           'App\Auth'      => '../app/library/Auth',
+           'App\Forms'     => '../app/forms',
         ]
     );
     $loader->registerDirs(
@@ -29,13 +35,42 @@ try {
     // Create a DI
     $di = new FactoryDefault();
 
+    $di['security'] = function () {
+        $security = new Security();
+
+        // Set the password hashing factor to 12 rounds
+        $security->setWorkFactor(12);
+
+        return $security;
+    };
+
+    $di['session'] = function () {
+        $session = new SessionAdapter();
+        if (PHP_SESSION_ACTIVE !== session_status()) {
+            $session->start();
+        }
+        return $session;
+    };
+
+    $di->setShared(
+        'flashSession',
+        function () {
+            return new FlashSession();
+        }
+    );
+
+    $di['dispatcher'] = function () {
+        $dispatcher = new Dispatcher();
+        return $dispatcher;
+    };
+
     // Set the database service
-    $di['db'] = function() {
+    $di['db'] = function () {
         return new DbAdapter(array(
-            "host"     => "localhost",
+            "host"     => "127.0.0.1",
             "username" => "root",
-            "password" => "secret",
-            "dbname"   => "tutorial"
+            "password" => "",
+            "dbname"   => "fullcalendar_dev_db"
         ));
     };
 
