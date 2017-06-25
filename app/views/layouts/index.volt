@@ -1,4 +1,4 @@
-{{ assets.outputCss('fullcalendarCSS') }}
+{{ assets.outputCss('applicationcss') }}
 {{ content() }}
-{{ assets.outputJs('fullcalendarJS') }}
+{{ assets.outputJs('applicationjs') }}
 

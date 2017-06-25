@@ -1,0 +1,4 @@
+../node_modules/moment/min/moment.min.js
+../node_modules/jquery/dist/jquery.min.js
+../node_modules/fullcalendar/dist/fullcalendar.js
+../app/assets/js/fullcalendarImpl.js
