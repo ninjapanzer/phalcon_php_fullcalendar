@@ -1,14 +1,18 @@
 <?php
 
-use Phalcon\Mvc\Controller;
 use App\Forms\UserForm;
 
-class UsersController extends Controller
+class UsersController extends BaseController
 {
-
   public function showAction($id)
   {
-    $this->view->user = Users::findById($id);
+    $id = $this->filter->sanitize($id, Phalcon\Filter::FILTER_INT);
+    $me = Users::findFirst([
+      'conditions' => 'id = :id:',
+      'bind' => ['id' => $id]
+    ]);
+
+    $this->view->user = $me;
   }
 
   public function newAction()

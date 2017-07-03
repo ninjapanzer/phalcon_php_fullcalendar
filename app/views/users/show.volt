@@ -1,3 +1,3 @@
 <div>
-Name: {{ user.name }}
+  Name: {{ user.name }}
 </div>

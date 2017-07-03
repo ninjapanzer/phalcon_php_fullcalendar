@@ -2,7 +2,6 @@
 namespace App\Auth;
 
 use Phalcon\Mvc\User\Component;
-use Models\Users;
 // use Models\RememberTokens;
 // use Models\SuccessLogins;
 // use Models\FailedLogins;
@@ -24,34 +23,22 @@ class Auth extends Component
     {
 
         // Check if the user exist
-        $user = Users::findFirstByEmail($credentials['email']);
+        $user = \Users::findFirstByEmail($credentials['email']);
         if ($user == false) {
-            //$this->registerUserThrottling(0);
-            throw new \Exception('Wrong email/password combination');
+            return false;
         }
 
         // Check the password
         if (!$this->security->checkHash($credentials['password'], $user->password)) {
-            //$this->registerUserThrottling($user->id);
-            throw new \Exception('Wrong email/password combination');
+            return false;
         }
-
-        // Check if the user was flagged
-        //$this->checkUserFlags($user);
-
-        // Register the successful login
-        //$this->saveSuccessLogin($user);
-
-        // Check if the remember me was selected
-        // if (isset($credentials['remember'])) {
-        //     $this->createRememberEnvironment($user);
-        // }
 
         $this->session->set('auth-identity', [
             'id' => $user->id,
-            'name' => $user->name,
-            'profile' => $user->profile->name
+            'name' => $user->name
         ]);
+
+        return true;
     }
 
     // /**
@@ -236,6 +223,23 @@ class Auth extends Component
     {
         $identity = $this->session->get('auth-identity');
         return $identity['name'];
+    }
+
+    /**
+     * Returns the current identity
+     *
+     * @return string
+     */
+    public function isLoggedIn()
+    {
+        $identity = $this->session->get('auth-identity');
+        // ?? is awesome!
+        // if (isset($identity['id']) {
+        //   return $identity['id'];
+        // } else {
+        //   return 0;
+        // }
+        return ($identity['id'] ?? 0) > 0;
     }
 
     /**

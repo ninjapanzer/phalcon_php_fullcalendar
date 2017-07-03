@@ -1,5 +1,6 @@
 {
     "require": {
-        "robmorgan/phinx": "^0.8.1"
+        "robmorgan/phinx": "^0.8.1",
+        "phalcon/dd": "^1.1"
     }
 }

@@ -3,8 +3,10 @@
 use Phalcon\Loader;
 use Phalcon\Tag;
 use Phalcon\Security;
+use App\Auth\Auth;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
+use Phalcon\Filter;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\Url;
 use Phalcon\Mvc\View;
@@ -44,6 +46,10 @@ try {
         return $security;
     };
 
+    $di['auth'] = function () {
+        return new Auth();
+    };
+
     $di['session'] = function () {
         $session = new SessionAdapter();
         if (PHP_SESSION_ACTIVE !== session_status()) {
@@ -58,6 +64,11 @@ try {
             return new FlashSession();
         }
     );
+
+    $di['filter'] = function () {
+        $filter = new Filter();
+        return $filter;
+    };
 
     $di['dispatcher'] = function () {
         $dispatcher = new Dispatcher();

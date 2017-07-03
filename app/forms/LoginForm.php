@@ -8,22 +8,10 @@ use Phalcon\Forms\Element\Password;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Email;
 
-class UserForm extends Form
+class LoginForm extends Form
 {
   public function initialize($entity = null, $options = null)
   {
-    $name = new Text('name', [
-      'placeholder' => 'Name'
-    ]);
-
-    $name->addValidators([
-      new PresenceOf([
-        'message' => 'The name is required'
-      ])
-    ]);
-
-    $this->add($name);
-
     $email = new Text('email', [
       'placeholder' => 'Email'
     ]);
